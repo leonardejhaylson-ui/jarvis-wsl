@@ -3,25 +3,23 @@
 # Função corrigida: o próprio Windows agora limpa o texto antes de falar
 falar() {
     TEXTO="$1"
-    
     # Exibe o texto na tela de forma rápida e fluida
     echo -e "$TEXTO" | pv -qL 80
     
     # O PowerShell limpa barras, códigos e colchetes de forma perfeita antes do áudio
-    /mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -Command "
-        \$textoBruto = '$TEXTO';
-        \$textoLimpo = \$textoBruto -replace '\x1b\[[0-9;]*m', '' -replace '\\\\[a-zA-Z]', ' ' -replace '[\[\]\(\)\-\r\n]', ' ';
-        \$textoLimpo = \$textoLimpo -replace '^[0-9]+\\)', '';
-        
-        \$voice = New-Object -ComObject SAPI.SpVoice;
-        foreach (\$v in \$voice.GetVoices()) {
-            if (\$v.GetDescription() -like '*PT*' -or \$v.GetDescription() -like '*Brazil*') {
-                \$voice.Voice = \$v;
-                break;
-            }
-        }
-        \$voice.Rate = 2;
-        \$voice.Speak(\$textoLimpo);
+    /mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -Command " \
+        \$textoBruto = '$TEXTO'; \
+        \$textoLimpo = \$textoBruto -replace '\x1b\[[0-9;]*m', '' -replace '\\\\[a-zA-Z]', ' ' -replace '[\[\]\(\)\-\r\n]', ' '; \
+        \$textoLimpo = \$textoLimpo -replace '^[0-9]+\\)', ''; \
+        \$voice = New-Object -ComObject SAPI.SpVoice; \
+        foreach (\$v in \$voice.GetVoices()) { \
+            if (\$v.GetDescription() -like '*PT*' -or \$v.GetDescription() -like '*Brazil*') { \
+                \$voice.Voice = \$v; \
+                break; \
+            } \
+        } \
+        \$voice.Rate = 2; \
+        \$voice.Speak(\$textoLimpo); \
     " > /dev/null 2>&1
 }
 
@@ -41,7 +39,8 @@ while true; do
     echo "7) Abrir o VS Code"
     echo "8) Modo Codar (Terminal Interno)"
     echo "9) Ativar Reconhecimento Facial (Webcam)"
-    echo "10) Desconectar"
+    echo "10) Protocolo Atualizar (Automação Git)"
+    echo "11) Desconectar"
     echo "--------------------------------------------------"
     echo -n "Diretriz: "
     read OPCAO
@@ -103,29 +102,41 @@ while true; do
             while true; do
                 echo -n -e "\033[1;36m[JARVIS-SANDBOX]:\033[0m "
                 read COMANDO
-                if [ "$COMANDO" == "sair" ]; then break; fi
+                if [ "$COMANDO" == "sair" ]; then
+                    break;
+                fi
                 eval "$COMANDO"
                 echo ""
             done
             echo ""
             ;;
         9)
-    echo ""
-    falar "[JARVIS]: Inicializando sensores ópticos em tempo real."
-    cp reconhecimento.py /mnt/c/Users/Public/reconhecimento.py 2>/dev/null
-    cp haarcascade_frontalface_default.xml /mnt/c/Users/Public/haarcascade_frontalface_default.xml 2>/dev/null
-    # Comando corrigido e simplificado (sem aspas conflitantes)
-    /mnt/c/Windows/System32/cmd.exe /c "start python C:\Users\Public\reconhecimento.py"
-    echo ""
-    ;;
-
+            echo ""
+            falar "[JARVIS]: Inicializando sensores ópticos em tempo real."
+            cp reconhecimento.py /mnt/c/Users/Public/reconhecimento.py 2>/dev/null
+            cp haarcascade_frontalface_default.xml /mnt/c/Users/Public/haarcascade_frontalface_default.xml 2>/dev/null
+            /mnt/c/Windows/System32/cmd.exe /c "start python C:\Users\Public\reconhecimento.py"
+            echo ""
+            ;;
         10)
             echo ""
-            falar "[JARVIS]: Sistemas offline. Até logo, Senhor."
+            if [ -f "./automacao_git.sh" ]; then
+                ./automacao_git.sh
+            else
+                falar "[JARVIS]: Script de automação do Git não encontrado."
+                echo -e "\e[1;31m[ERRO]\e[0m O arquivo 'automacao_git.sh' precisa estar na mesma pasta."
+            fi
+            echo ""
+            echo "Pressione Enter para voltar ao menu..."
+            read -r
+            ;;
+        11)
+            echo ""
+            falar "[JARVIS]: Sistemas offline. Até logo, Senhor Morpheus."
             exit 0
             ;;
         *)
-           echo ""
+            echo ""
             falar "[JARVIS]: Comando inválido."
             echo ""
             ;;
