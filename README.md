@@ -1,51 +1,71 @@
-# Jarvis Assistant - WSL
+# JARVIS WSL
 
-Um assistente virtual interativo inspirado no JARVIS, operando de forma híbrida e integrada entre o ecossistema Linux (Ubuntu via WSL2) e o Windows.
+Projeto experimental de automação que integra Ubuntu/WSL2 e Windows usando Shell Script e Python.
 
-O projeto utiliza automação em Shell Script no Linux para controle e lógica operacional, acionando recursos de mídia, programas locais e inteligência artificial de visão computacional diretamente no hardware do Windows.
+A proposta é explorar como um assistente local pode coordenar comandos do sistema, voz, aplicações Windows e visão computacional a partir de uma interface de terminal.
 
----
+## O que existe hoje
 
-## Funcionalidades Principais
+- menu interativo em Shell Script;
+- síntese de voz pelo SAPI do Windows via PowerShell;
+- consulta de status do sistema;
+- consulta de clima via `wttr.in`;
+- abertura de GitHub, YouTube, Spotify e VS Code;
+- terminal interno para experimentação de comandos;
+- detecção facial por webcam com Python, OpenCV e Haar Cascade;
+- integração entre processos Linux/WSL e executáveis do Windows;
+- suporte opcional a scripts auxiliares de backup e automação Git quando presentes no ambiente.
 
-*   **Sistema de Voz**: Comunicação por áudio nativo em português do Brasil integrada ao Windows, sem leitura de códigos do sistema.
-*   **Visão Computacional**: Rastreamento facial dinâmico em tempo real utilizando Python 3 e a biblioteca OpenCV com modelos Haar Cascade.
-*   **Modo Codar**: Um terminal secundário encapsulado integrado dentro do próprio Jarvis para testes rápidos de comandos Linux.
-*   **Automação Web**: Abertura instantânea de plataformas de desenvolvimento e entretenimento (GitHub, YouTube, Spotify Web) através de comandos diretos de hardware.
-*   **Protocolo de Backup**: Rotina inteligente de cópia de segurança de diretórios estruturada por carimbo de data e hora (ano, mês, dia, hora e minuto).
+## Arquitetura atual
 
----
-
-## Requisitos de Instalação
-
-### No ambiente Windows
-1. Certifique-se de possuir o Python 3 instalado e configurado nas variáveis de ambiente.
-2. Instale a biblioteca do OpenCV para os sensores ópticos rodando no CMD clássico:
-   ```cmd
-   pip install opencv-python
-   ```
-
-### No ambiente Linux (Ubuntu / WSL)
-Instale o gerenciador de velocidade de exibição de texto do terminal:
-```bash
-sudo apt update && sudo apt install -y pv
+```text
+Terminal no WSL
+    ↓
+jarvis.sh
+    ├── comandos Linux
+    ├── PowerShell / SAPI (voz)
+    ├── cmd.exe / aplicações Windows
+    └── Python + OpenCV (detecção facial)
 ```
 
----
+## Tecnologias
 
-## Como Executar
+- Bash / Shell Script
+- Python
+- OpenCV
+- PowerShell
+- WSL2
+- Haar Cascade
 
-Dê a permissão de segurança para o script e inicie o protocolo operacional:
+## Executando
+
+O projeto foi pensado para um ambiente Windows com WSL2. No Ubuntu/WSL:
+
 ```bash
+sudo apt update
+sudo apt install -y pv
 chmod +x jarvis.sh
 ./jarvis.sh
 ```
 
----
+Para o módulo de visão, o Python do Windows precisa ter OpenCV disponível:
 
-## Estrutura de Arquivos
+```bash
+pip install opencv-python
+```
 
-*   `jarvis.sh`: O núcleo central de versão, lógica do menu e comandos de automação (Shell Script).
-*   `reconhecimento.py`: O módulo gráfico em Python responsável por gerenciar a webcam e realizar a detecção facial.
-*   `fazer_backup.sh`: Rotina de cópia recursiva de segurança de diretórios.
-*   `haarcascade_frontalface_default.xml`: O banco de dados matemático da inteligência artificial para detecção de estruturas faciais humanas.
+## Limites atuais
+
+Este é um **protótipo experimental**, não um assistente multimodal completo. O módulo de câmera atual realiza **detecção de faces**, e não identificação biométrica de uma pessoa. Algumas ações também dependem de caminhos e recursos específicos do Windows/WSL.
+
+## Próximos passos possíveis
+
+- remover caminhos fixos e transformar configurações em parâmetros;
+- separar comandos em módulos;
+- substituir o terminal baseado em `eval` por uma interface de comandos restrita;
+- adicionar testes para rotinas que não dependem de hardware;
+- evoluir a detecção visual de forma modular.
+
+## Por que mantenho este projeto
+
+O JARVIS funciona como laboratório pessoal para automação, integração entre sistemas operacionais, Shell Script, Python e visão computacional. Ele registra uma etapa da minha evolução e continuará sendo refinado conforme avanço nesses temas.
